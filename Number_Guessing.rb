@@ -4,16 +4,20 @@ secret_number = rand(1..100)
 guesses = []
 answer_found = false
 guess_higher_next_time = false
+range_estabished = false
+been_to_low = false
+been_to_high = false
 
-def too_high
-  puts "Your guess was too high. Try again!"
+def too_high(count)
+  puts "Your guess was too high."
+  if count
 end
 
-def too_low
+def too_low(count)
   puts "Your guess was too low. Try again!"
 end
 
-def bad_strategy(guesses_so_far, higher)
+def bad_strategy(guesses_so_far, higher, range_known)
   len = guesses_so_far.length
   if (len > 1)
     for guess in 0...(len - 1)
@@ -42,11 +46,15 @@ while (guesses.length < 5 && !answer_found) do
   if guesses.last < secret_number
     too_low
     guess_higher_next_time = true
+    been_to_low = true
   elsif guesses.last > secret_number
     too_high
     guess_higher_next_time = false
+    been_to_low = true
   else
     puts "You got it!"
     answer_found = true
   end
+  if(been_to_low && been_to_high)
+    range_estabished = true
 end
