@@ -1,60 +1,55 @@
-puts "I have a number between 1 and 100. Try to guess what it is!"
+puts "I have a number between 1 and 100. You have 5 chances to guess what it is!"
 
 secret_number = rand(1..100)
-guesses = []
 answer_found = false
-guess_higher_next_time = false
-range_estabished = false
-been_to_low = false
-been_to_high = false
+low_bound = 0
+high_bound = 101
+tries = 0
 
 def too_high(count)
-  puts "Your guess was too high."
-  if count
+  print "Your guess was too high. "
+  if count < 5
+    puts "You have #{5 - count} tries remaining!"
+  else
+    puts "You lose!"
+  end
 end
 
 def too_low(count)
-  puts "Your guess was too low. Try again!"
+  print "Your guess was too low. "
+  if count < 5
+    puts "You have #{5 - count} tries remaining!"
+  else
+    puts "You lose!"
+  end
 end
 
-def bad_strategy(guesses_so_far, higher, range_known)
-  len = guesses_so_far.length
-  if (len > 1)
-    for guess in 0...(len - 1)
-      if guesses_so_far[guess] == guesses_so_far.last
-        return true
-      end
-    end
-  end
-  if (guesses_so_far.last > guesses_so_far[len - 2] && !higher)
+def bad_strategy(this_guess, low, high)
+  if this_guess <= low || this_guess >= high
     return true
+  else
+    return false
   end
-  if (guesses_so_far.last < guesses_so_far[len - 2] && higher)
-    return true
-  end
-  return false
 end
 
 
-while (guesses.length < 5 && !answer_found) do
-  guesses.push(gets.chomp.to_i)
+while (tries < 5 && !answer_found) do
 
-  if bad_strategy(guesses, guess_higher_next_time)
+  guess = gets.chomp.to_i
+  tries += 1
+
+  if bad_strategy(guess, low_bound, high_bound)
     puts "Are you sure you know what you're doing?"
   end
 
-  if guesses.last < secret_number
-    too_low
-    guess_higher_next_time = true
-    been_to_low = true
-  elsif guesses.last > secret_number
-    too_high
-    guess_higher_next_time = false
-    been_to_low = true
+  if guess < secret_number
+    too_low(tries)
+    low_bound = guess
+  elsif guess > secret_number
+    too_high(tries)
+    high_bound = guess
   else
     puts "You got it!"
     answer_found = true
   end
-  if(been_to_low && been_to_high)
-    range_estabished = true
 end
