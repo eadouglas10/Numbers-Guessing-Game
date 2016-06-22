@@ -44,10 +44,14 @@ while (tries < 5 && !answer_found) do
 
   if guess < secret_number
     too_low(tries)
-    low_bound = guess
+    if guess > low_bound
+      low_bound = guess
+    end
   elsif guess > secret_number
     too_high(tries)
-    high_bound = guess
+    if guess < high_bound
+      high_bound = guess
+    end
   else
     puts "You got it!"
     answer_found = true
